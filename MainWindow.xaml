@@ -99,47 +99,49 @@
         </Style>
     </Window.Resources>
 
-    <!-- 层叠布局：底层数据展示 + 上层控制按钮 -->
+    <!--
+        层叠布局：
+        - 底层：数据展示区（Viewbox 等比缩放，HorizontalAlignment="Left" 防止居中留黑边）
+        - 上层：控制按钮 + Popup
+    -->
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="384*"/>
-            <ColumnDefinition Width="9*"/>
-            <ColumnDefinition Width="307*"/>
-        </Grid.ColumnDefinitions>
-        <!-- ======== 底层：数据展示区 ======== -->
-        <Border Background="#141B22" CornerRadius="4" Margin="4,4,4,4" Grid.ColumnSpan="3">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="89"/>
-                    <ColumnDefinition Width="251"/>
-                </Grid.ColumnDefinitions>
-
-                <controls:ChartControl x:Name="Chart" Grid.Column="0" Margin="10,10,10,10"/>
-                <controls:PedalsControl x:Name="Pedals" Grid.Column="1" Margin="5,10,221,10" Grid.ColumnSpan="2"/>
-
-                <Grid Grid.Column="2" Margin="5,10,10,10">
+        <!-- ======== 底层：数据展示区（Viewbox 等比缩放） ======== -->
+        <Border Background="#141B22" CornerRadius="4" Margin="4"
+                HorizontalAlignment="Left">
+            <Viewbox Stretch="Uniform" HorizontalAlignment="Left">
+                <Grid x:Name="InnerGrid">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="81"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition x:Name="ChartColumn" Width="Auto"/>
+                        <ColumnDefinition Width="89"/>
+                        <ColumnDefinition Width="251"/>
                     </Grid.ColumnDefinitions>
 
-                    <Grid Grid.Column="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="16"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                    <controls:ChartControl x:Name="Chart" Grid.Column="0" Margin="10" Width="227"/>
+                    <controls:PedalsControl x:Name="Pedals" Grid.Column="1" Margin="5,10,221,10" Grid.ColumnSpan="2"/>
 
-                        <controls:RpmLedControl x:Name="RpmLed" Grid.Row="0" Margin="10,0,-10,0"/>
-                        <controls:GearControl x:Name="Gear" Grid.Row="1" Margin="15,0,-5,37" Grid.RowSpan="2"/>
-                        <controls:SpeedControl x:Name="Speed" Grid.Row="2" VerticalAlignment="Center" Margin="10,0,-10,0"/>
+                    <Grid Grid.Column="2" Margin="5,10,10,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="81"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="16"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <controls:RpmLedControl x:Name="RpmLed" Grid.Row="0" Margin="10,0,-10,0"/>
+                            <controls:GearControl x:Name="Gear" Grid.Row="1" Margin="15,0,-5,37" Grid.RowSpan="2"/>
+                            <controls:SpeedControl x:Name="Speed" Grid.Row="2" VerticalAlignment="Center" Margin="10,0,-10,0"/>
+                        </Grid>
+
+                        <controls:SteeringControl x:Name="Steering" Grid.Column="1"
+                                                  Width="138" HorizontalAlignment="Left" Margin="18,0,0,0"/>
                     </Grid>
-
-                    <controls:SteeringControl x:Name="Steering" Grid.Column="1"
-                                              Width="138" HorizontalAlignment="Left" Margin="18,0,0,0"/>
                 </Grid>
-            </Grid>
+            </Viewbox>
         </Border>
 
         <!-- ======== 右上角：齿轮 + 关闭 按钮组 ======== -->
@@ -147,7 +149,7 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
                     Margin="0,4,4,0"
-                    Style="{StaticResource ControlPanelStyle}" Grid.Column="2">
+                    Style="{StaticResource ControlPanelStyle}">
             <Button x:Name="GearButton" Content="⚙"
                     Style="{StaticResource GearButtonStyle}"
                     Click="OnGearButtonClick"/>
@@ -163,16 +165,43 @@
                Placement="Bottom"
                StaysOpen="False"
                HorizontalOffset="-60"
-               VerticalOffset="4" Grid.ColumnSpan="3">
+               VerticalOffset="4">
             <Border Background="#2D2D2D" CornerRadius="6" Padding="12,8"
                     BorderBrush="#555" BorderThickness="1">
                 <StackPanel>
+                    <!-- 透明度调节 -->
                     <TextBlock Text="HUD 透明度" Foreground="#CCC"
                                FontSize="11" Margin="0,0,0,6"/>
                     <Slider x:Name="OpacitySlider" Width="140"
                             Minimum="0.1" Maximum="1.0"
                             Value="{Binding Opacity, RelativeSource={RelativeSource AncestorType=Window}, Mode=TwoWay}"
                             TickFrequency="0.1" IsSnapToTickEnabled="False"/>
+
+                    <!-- 分隔线 -->
+                    <Border Height="1" Background="#555" Margin="0,10,0,8"/>
+
+                    <!-- 最左侧踏板显示模式 -->
+                    <TextBlock Text="最左侧踏板显示" Foreground="#CCC"
+                               FontSize="11" Margin="0,0,0,6"/>
+                    <RadioButton x:Name="RbClutch" Content="离合 (Clutch)"
+                                 Foreground="#CCC" FontSize="11"
+                                 GroupName="LeftPedal" IsChecked="True"
+                                 Margin="0,0,0,4"
+                                 Checked="OnPedalModeChanged"/>
+                    <RadioButton x:Name="RbHandbrake" Content="手刹 (Handbrake)"
+                                 Foreground="#CCC" FontSize="11"
+                                 GroupName="LeftPedal"
+                                 Checked="OnPedalModeChanged"/>
+
+                    <!-- 分隔线 -->
+                    <Border Height="1" Background="#555" Margin="0,10,0,8"/>
+
+                    <!-- 显示/隐藏开度曲线 -->
+                    <CheckBox x:Name="ShowTraceToggle" Content="显示开度曲线 (Show Trace)"
+                              Foreground="#CCC" FontSize="11"
+                              IsChecked="True"
+                              Checked="OnShowTraceToggled"
+                              Unchecked="OnShowTraceToggled"/>
                 </StackPanel>
             </Border>
         </Popup>

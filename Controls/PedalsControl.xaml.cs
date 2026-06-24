@@ -1,12 +1,9 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ForzaUDPReader.WPF.Controls
 {
-    /// <summary>
-    /// 踏板区 — 纯 XAML + 依赖属性驱动
-    /// 通过 ScaleTransform 实现从底部向上的填充效果
-    /// </summary>
     public partial class PedalsControl : UserControl
     {
         #region 依赖属性
@@ -38,11 +35,35 @@ namespace ForzaUDPReader.WPF.Controls
             DependencyProperty.Register(nameof(ThrottlePercent), typeof(double), typeof(PedalsControl),
                 new PropertyMetadata(0.0, OnPedalPercentChanged));
 
+        public double HandbrakePercent
+        {
+            get => (double)GetValue(HandbrakePercentProperty);
+            set => SetValue(HandbrakePercentProperty, value);
+        }
+        public static readonly DependencyProperty HandbrakePercentProperty =
+            DependencyProperty.Register(nameof(HandbrakePercent), typeof(double), typeof(PedalsControl),
+                new PropertyMetadata(0.0, OnPedalPercentChanged));
+
+        public bool IsHandbrakeMode
+        {
+            get => (bool)GetValue(IsHandbrakeModeProperty);
+            set => SetValue(IsHandbrakeModeProperty, value);
+        }
+        public static readonly DependencyProperty IsHandbrakeModeProperty =
+            DependencyProperty.Register(nameof(IsHandbrakeMode), typeof(bool), typeof(PedalsControl),
+                new PropertyMetadata(false, OnModeChanged));
+
         #endregion
+
+        // 手刹颜色（橙色系）
+        private static readonly SolidColorBrush HandbrakeBrush = new SolidColorBrush(Color.FromRgb(255, 165, 0));
+        private static readonly SolidColorBrush ClutchBrush = new SolidColorBrush(Color.FromRgb(74, 110, 224));
 
         public PedalsControl()
         {
             InitializeComponent();
+            HandbrakeBrush.Freeze();
+            ClutchBrush.Freeze();
         }
 
         private static void OnPedalPercentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -50,11 +71,29 @@ namespace ForzaUDPReader.WPF.Controls
             ((PedalsControl)d).UpdateVisuals();
         }
 
+        private static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var c = (PedalsControl)d;
+            bool isHandbrake = (bool)e.NewValue;
+
+            // 切换标签文字
+            c.LeftPedalLabel.Text = isHandbrake ? "H" : "C";
+
+            // 切换颜色
+            var brush = isHandbrake ? HandbrakeBrush : ClutchBrush;
+            c.LeftCapTop.Background = brush;
+            c.LeftCapBottom.Background = brush;
+            c.LeftFill.Background = brush;
+
+            c.UpdateVisuals();
+        }
+
         private void UpdateVisuals()
         {
-            // 离合
-            ClutchFillScale.ScaleY = ClutchPercent / 100.0;
-            ClutchValue.Text = ((int)ClutchPercent).ToString();
+            // 最左侧踏板：根据模式选择数据源
+            double leftPercent = IsHandbrakeMode ? HandbrakePercent : ClutchPercent;
+            LeftFillScale.ScaleY = leftPercent / 100.0;
+            LeftValue.Text = ((int)leftPercent).ToString();
 
             // 刹车
             BrakeFillScale.ScaleY = BrakePercent / 100.0;

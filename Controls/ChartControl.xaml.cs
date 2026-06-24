@@ -16,6 +16,7 @@ namespace ForzaUDPReader.WPF.Controls
         private readonly List<float> _throttleHistory = new List<float>();
         private readonly List<float> _brakeHistory = new List<float>();
         private readonly List<float> _clutchHistory = new List<float>();
+        private readonly List<float> _handbrakeHistory = new List<float>();
         private readonly object _historyLock = new object();
 
         // 预冻结画刷（避免每帧分配）
@@ -23,6 +24,7 @@ namespace ForzaUDPReader.WPF.Controls
         private static readonly SolidColorBrush ThrottleBrush = CreateFrozenBrush(76, 217, 100);  // #4cd964
         private static readonly SolidColorBrush BrakeBrush = CreateFrozenBrush(255, 107, 74);     // #ff6b4a
         private static readonly SolidColorBrush ClutchBrush = CreateFrozenBrush(74, 110, 224);    // #4a6ee0
+        private static readonly SolidColorBrush HandbrakeBrush = CreateFrozenBrush(255, 165, 0);  // #FFA500
 
         public ChartControl()
         {
@@ -32,17 +34,19 @@ namespace ForzaUDPReader.WPF.Controls
         /// <summary>
         /// 添加一个数据点（可从任意线程调用）
         /// </summary>
-        public void AddDataPoint(float throttle, float brake, float clutch)
+        public void AddDataPoint(float throttle, float brake, float clutch, float handbrake)
         {
             lock (_historyLock)
             {
                 _throttleHistory.Add(throttle);
                 _brakeHistory.Add(brake);
                 _clutchHistory.Add(clutch);
+                _handbrakeHistory.Add(handbrake);
 
                 if (_throttleHistory.Count > MaxHistoryPoints) _throttleHistory.RemoveAt(0);
                 if (_brakeHistory.Count > MaxHistoryPoints) _brakeHistory.RemoveAt(0);
                 if (_clutchHistory.Count > MaxHistoryPoints) _clutchHistory.RemoveAt(0);
+                if (_handbrakeHistory.Count > MaxHistoryPoints) _handbrakeHistory.RemoveAt(0);
             }
         }
 
@@ -54,12 +58,13 @@ namespace ForzaUDPReader.WPF.Controls
             double h = ActualHeight;
             if (w <= 0 || h <= 0) return;
 
-            float[] throttleSnap, brakeSnap, clutchSnap;
+            float[] throttleSnap, brakeSnap, clutchSnap, handbrakeSnap;
             lock (_historyLock)
             {
                 throttleSnap = _throttleHistory.ToArray();
                 brakeSnap = _brakeHistory.ToArray();
                 clutchSnap = _clutchHistory.ToArray();
+                handbrakeSnap = _handbrakeHistory.ToArray();
             }
 
             // 绘制网格线 (5条横线)
@@ -78,6 +83,7 @@ namespace ForzaUDPReader.WPF.Controls
                 DrawTraceLine(dc, w, h, throttleSnap, ThrottleBrush, 100f);
                 DrawTraceLine(dc, w, h, brakeSnap, BrakeBrush, 100f);
                 DrawTraceLine(dc, w, h, clutchSnap, ClutchBrush, 100f);
+                DrawTraceLine(dc, w, h, handbrakeSnap, HandbrakeBrush, 100f);
             }
         }
 
