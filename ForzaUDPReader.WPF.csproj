@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>ForzaUDPReader.WPF</RootNamespace>
+    <AssemblyName>ForzaUDPReader.WPF</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Fonts\sui generis free.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
