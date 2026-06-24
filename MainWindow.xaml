@@ -3,12 +3,178 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:ForzaUDPReader.WPF.Controls"
         Title="Forza Horizon 6 - Telemetry HUD"
-        Width="680" Height="220"
+        Width="729" Height="167"
+        MinWidth="500" MinHeight="130"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="CanMinimize"
+        ResizeMode="CanResizeWithGrip"
         Topmost="True"
-        Background="#0d1115">
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        MouseLeftButtonDown="OnMouseLeftButtonDown">
+
+    <Window.Resources>
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- 齿轮按钮样式 -->
+        <!-- ═══════════════════════════════════════════ -->
+        <Style x:Key="GearButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#B0B0B0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="28"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bg" Background="{TemplateBinding Background}"
+                                CornerRadius="4" Padding="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#3A3A3A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- 关闭按钮样式 -->
+        <!-- ═══════════════════════════════════════════ -->
+        <Style x:Key="CloseButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#B0B0B0"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Width" Value="28"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bg" Background="{TemplateBinding Background}"
+                                CornerRadius="4" Padding="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#E81123"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- 控制按钮组淡入/淡出动画 -->
+        <!-- ═══════════════════════════════════════════ -->
+        <Style x:Key="ControlPanelStyle" TargetType="StackPanel">
+            <Setter Property="Opacity" Value="0"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                 To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                 To="0" Duration="0:0:0.3"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <!-- 层叠布局：底层数据展示 + 上层控制按钮 -->
     <Grid>
-        <controls:TelemetryHudControl x:Name="HudControl" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="384*"/>
+            <ColumnDefinition Width="9*"/>
+            <ColumnDefinition Width="307*"/>
+        </Grid.ColumnDefinitions>
+        <!-- ======== 底层：数据展示区 ======== -->
+        <Border Background="#141B22" CornerRadius="4" Margin="4,4,4,4" Grid.ColumnSpan="3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="89"/>
+                    <ColumnDefinition Width="251"/>
+                </Grid.ColumnDefinitions>
+
+                <controls:ChartControl x:Name="Chart" Grid.Column="0" Margin="10,10,10,10"/>
+                <controls:PedalsControl x:Name="Pedals" Grid.Column="1" Margin="5,10,221,10" Grid.ColumnSpan="2"/>
+
+                <Grid Grid.Column="2" Margin="5,10,10,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="81"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <controls:RpmLedControl x:Name="RpmLed" Grid.Row="0" Margin="10,0,-10,0"/>
+                        <controls:GearControl x:Name="Gear" Grid.Row="1" Margin="15,0,-5,37" Grid.RowSpan="2"/>
+                        <controls:SpeedControl x:Name="Speed" Grid.Row="2" VerticalAlignment="Center" Margin="10,0,-10,0"/>
+                    </Grid>
+
+                    <controls:SteeringControl x:Name="Steering" Grid.Column="1"
+                                              Width="138" HorizontalAlignment="Left" Margin="18,0,0,0"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- ======== 右上角：齿轮 + 关闭 按钮组 ======== -->
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0,4,4,0"
+                    Style="{StaticResource ControlPanelStyle}" Grid.Column="2">
+            <Button x:Name="GearButton" Content="⚙"
+                    Style="{StaticResource GearButtonStyle}"
+                    Click="OnGearButtonClick"/>
+            <Button Content="×"
+                    Style="{StaticResource CloseButtonStyle}"
+                    Click="OnCloseButtonClick"
+                    Margin="4,0,0,0"/>
+        </StackPanel>
+
+        <!-- ======== 透明度调节 Popup ======== -->
+        <Popup x:Name="OpacityPopup"
+               PlacementTarget="{Binding ElementName=GearButton}"
+               Placement="Bottom"
+               StaysOpen="False"
+               HorizontalOffset="-60"
+               VerticalOffset="4" Grid.ColumnSpan="3">
+            <Border Background="#2D2D2D" CornerRadius="6" Padding="12,8"
+                    BorderBrush="#555" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="HUD 透明度" Foreground="#CCC"
+                               FontSize="11" Margin="0,0,0,6"/>
+                    <Slider x:Name="OpacitySlider" Width="140"
+                            Minimum="0.1" Maximum="1.0"
+                            Value="{Binding Opacity, RelativeSource={RelativeSource AncestorType=Window}, Mode=TwoWay}"
+                            TickFrequency="0.1" IsSnapToTickEnabled="False"/>
+                </StackPanel>
+            </Border>
+        </Popup>
     </Grid>
 </Window>

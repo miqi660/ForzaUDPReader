@@ -1,0 +1,6 @@
+<UserControl x:Class="ForzaUDPReader.WPF.Controls.SteeringControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+    <!-- Background="Transparent" 是必须的，否则 WPF 渲染引擎可能跳过 OnRender -->
+</UserControl>

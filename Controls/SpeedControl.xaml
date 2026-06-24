@@ -1,0 +1,21 @@
+<UserControl x:Class="ForzaUDPReader.WPF.Controls.SpeedControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+        速度数值 + "km/h" 单位
+        字号: 15pt × 1.33 ≈ 20 DIP (数值), 10pt × 1.33 ≈ 13 DIP (单位)
+        使用全局 ForzaFont 资源
+    -->
+    <StackPanel VerticalAlignment="Center">
+        <TextBlock x:Name="SpeedText" Text="0"
+                   FontFamily="{StaticResource ForzaFont}"
+                   FontSize="20" FontWeight="Bold"
+                   Foreground="White"
+                   HorizontalAlignment="Center" />
+        <TextBlock Text="km/h"
+                   FontFamily="{StaticResource ForzaFont}"
+                   FontSize="13"
+                   Foreground="#AAAAAA"
+                   HorizontalAlignment="Center" />
+    </StackPanel>
+</UserControl>

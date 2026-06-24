@@ -1,0 +1,103 @@
+<UserControl x:Class="ForzaUDPReader.WPF.Controls.PedalsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+        三个踏板进度条: 离合(蓝) / 刹车(红) / 油门(绿)
+        使用 ScaleTransform 实现从底部向上的填充效果
+    -->
+    <Grid>
+        <!-- 固定列宽（Viewbox 架构下不使用 * 动态拉伸） -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30" />
+            <ColumnDefinition Width="30" />
+            <ColumnDefinition Width="30" />
+        </Grid.ColumnDefinitions>
+
+        <!-- ===== 离合 (Clutch) ===== -->
+        <Grid Grid.Column="0" Margin="1,0,1,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="ClutchValue" Grid.Row="0" Text="0"
+                       FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"
+                       Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,2" />
+            <Border Grid.Row="1" Background="#4a6ee0" Height="4" />
+            <Border Grid.Row="2" Background="#2a3038">
+                <Border x:Name="ClutchFill" Background="#4a6ee0"
+                        VerticalAlignment="Stretch"
+                        RenderTransformOrigin="0,1">
+                    <Border.RenderTransform>
+                        <ScaleTransform x:Name="ClutchFillScale" ScaleY="0" />
+                    </Border.RenderTransform>
+                </Border>
+            </Border>
+            <Border Grid.Row="3" Background="#4a6ee0" Height="4" />
+            <TextBlock Grid.Row="4" Text="C"
+                       FontFamily="Segoe UI" FontSize="12" FontWeight="Bold"
+                       Foreground="White" HorizontalAlignment="Center" Margin="0,2,0,0" />
+        </Grid>
+
+        <!-- ===== 刹车 (Brake) ===== -->
+        <Grid Grid.Column="1" Margin="1,0,1,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="BrakeValue" Grid.Row="0" Text="0"
+                       FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"
+                       Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,2" />
+            <Border Grid.Row="1" Background="#ff6b4a" Height="4" />
+            <Border Grid.Row="2" Background="#2a3038">
+                <Border x:Name="BrakeFill" Background="#ff6b4a"
+                        VerticalAlignment="Stretch"
+                        RenderTransformOrigin="0,1">
+                    <Border.RenderTransform>
+                        <ScaleTransform x:Name="BrakeFillScale" ScaleY="0" />
+                    </Border.RenderTransform>
+                </Border>
+            </Border>
+            <Border Grid.Row="3" Background="#ff6b4a" Height="4" />
+            <TextBlock Grid.Row="4" Text="B"
+                       FontFamily="Segoe UI" FontSize="12" FontWeight="Bold"
+                       Foreground="White" HorizontalAlignment="Center" Margin="0,2,0,0" />
+        </Grid>
+
+        <!-- ===== 油门 (Throttle) ===== -->
+        <Grid Grid.Column="2" Margin="1,0,1,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="ThrottleValue" Grid.Row="0" Text="0"
+                       FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"
+                       Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,2" />
+            <Border Grid.Row="1" Background="#4cd964" Height="4" />
+            <Border Grid.Row="2" Background="#2a3038">
+                <Border x:Name="ThrottleFill" Background="#4cd964"
+                        VerticalAlignment="Stretch"
+                        RenderTransformOrigin="0,1">
+                    <Border.RenderTransform>
+                        <ScaleTransform x:Name="ThrottleFillScale" ScaleY="0" />
+                    </Border.RenderTransform>
+                </Border>
+            </Border>
+            <Border Grid.Row="3" Background="#4cd964" Height="4" />
+            <TextBlock Grid.Row="4" Text="T"
+                       FontFamily="Segoe UI" FontSize="12" FontWeight="Bold"
+                       Foreground="White" HorizontalAlignment="Center" Margin="0,2,0,0" />
+        </Grid>
+    </Grid>
+</UserControl>
