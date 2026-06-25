@@ -9,9 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Fonts\sui generis free.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Fonts\sui-generis-free.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

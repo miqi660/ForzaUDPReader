@@ -5,6 +5,7 @@
     <Application.Resources>
         <!-- 全局自定义字体资源，通过 pack:// URI 引用本地字体文件 -->
         <!-- 字体文件位于输出目录的 Fonts/ 子文件夹中 -->
-        <FontFamily x:Key="ForzaFont">pack://application:,,,/Fonts/#sui generis free, Arial Black</FontFamily>
+        <FontFamily x:Key="ForzaFont">pack://application:,,,/Fonts/#sui-generis-free, Arial Black</FontFamily>
+        <FontFamily x:Key="HudFont">pack://application:,,,/Fonts/#sui-generis-free</FontFamily>
     </Application.Resources>
 </Application>

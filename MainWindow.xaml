@@ -2,8 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:ForzaUDPReader.WPF.Controls"
+        xmlns:converters="clr-namespace:ForzaUDPReader.WPF.Converters"
         Title="Forza Horizon 6 - Telemetry HUD"
-        Width="729" Height="167"
+        Width="648" Height="180"
         MinWidth="500" MinHeight="130"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResizeWithGrip"
@@ -11,9 +12,13 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        MouseLeftButtonDown="OnMouseLeftButtonDown">
+        MouseLeftButtonDown="OnMouseLeftButtonDown"
+        FontFamily="{StaticResource ForzaFont}">
 
     <Window.Resources>
+        <converters:TurnsToDegreeConverter x:Key="TurnsToDegree"/>
+        <converters:LenientDoubleConverter x:Key="LenientDouble" Min="0.01" Max="255.0"/>
+
         <!-- ═══════════════════════════════════════════ -->
         <!-- 齿轮按钮样式 -->
         <!-- ═══════════════════════════════════════════ -->
@@ -132,9 +137,9 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <controls:RpmLedControl x:Name="RpmLed" Grid.Row="0" Margin="10,0,-10,0"/>
-                            <controls:GearControl x:Name="Gear" Grid.Row="1" Margin="15,0,-5,37" Grid.RowSpan="2"/>
-                            <controls:SpeedControl x:Name="Speed" Grid.Row="2" VerticalAlignment="Center" Margin="10,0,-10,0"/>
+                            <controls:RpmLedControl x:Name="RpmLed" Grid.Row="0" Margin="10,0,-23,0"/>
+                            <controls:GearControl x:Name="Gear" Grid.Row="1" Margin="16,0,-17,37" Grid.RowSpan="2"/>
+                            <controls:SpeedControl x:Name="Speed" Grid.Row="2" VerticalAlignment="Center" Margin="10,0,-23,0" Height="40"/>
                         </Grid>
 
                         <controls:SteeringControl x:Name="Steering" Grid.Column="1"
@@ -202,6 +207,34 @@
                               IsChecked="True"
                               Checked="OnShowTraceToggled"
                               Unchecked="OnShowTraceToggled"/>
+
+                    <!-- 分隔线 -->
+                    <Border Height="1" Background="#555" Margin="0,10,0,8"/>
+
+                    <!-- 方向盘单边圈数设置 -->
+                    <TextBlock Text="方向盘单边圈数 (Turns)" Foreground="#CCC"
+                               FontSize="11" Margin="0,0,0,4"/>
+                    <TextBlock Text="可输入0.01~255.00, 用于设置单边旋转圈数" Foreground="#888"
+                               FontSize="9" Margin="0,0,0,6"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox x:Name="TurnsInput" Width="60"
+                                 FontSize="11" Padding="2,1"
+                                 VerticalContentAlignment="Center"
+                                 Text="{Binding SingleSideTurns,
+                                        Source={x:Reference Steering},
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        Converter={StaticResource LenientDouble}}"/>
+
+                        <TextBlock VerticalAlignment="Center" Margin="8,0,0,0" FontSize="11">
+                            <TextBlock.Text>
+                                <Binding Path="SingleSideTurns"
+                                         Source="{x:Reference Steering}"
+                                         Converter="{StaticResource TurnsToDegree}"
+                                         FallbackValue="±180°"/>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
                 </StackPanel>
             </Border>
         </Popup>

@@ -21,6 +21,19 @@ namespace ForzaUDPReader.WPF.Controls
             DependencyProperty.Register(nameof(SteerPercent), typeof(double), typeof(SteeringControl),
                 new PropertyMetadata(0.0));
 
+        /// <summary>
+        /// 单边旋转圈数（如 0.5 = 单边半圈 = ±180°）。
+        /// 由 MainWindow Popup 中的 TextBox 通过 x:Reference 双向绑定直接写入。
+        /// </summary>
+        public double SingleSideTurns
+        {
+            get => (double)GetValue(SingleSideTurnsProperty);
+            set => SetValue(SingleSideTurnsProperty, value);
+        }
+        public static readonly DependencyProperty SingleSideTurnsProperty =
+            DependencyProperty.Register(nameof(SingleSideTurns), typeof(double), typeof(SteeringControl),
+                new PropertyMetadata(0.5));
+
         #endregion
 
         // 预冻结画刷
@@ -46,7 +59,10 @@ namespace ForzaUDPReader.WPF.Controls
             double radius = Math.Min(w, h) / 2 - 10;
 
             // 方向盘旋转角度
-            float steerAngle = (float)(SteerPercent * 1.35);
+            // SteerPercent: -100 ~ +100（左满舵 ~ 右满舵）
+            // SingleSideTurns: 单边圈数（如 0.5 = 单边半圈 = ±180°）
+            // 公式: steerAngle = (SteerPercent / 100) * (SingleSideTurns * 360)
+            float steerAngle = (float)((SteerPercent / 100.0) * (SingleSideTurns * 360.0));
 
             // SVG viewBox 200x200, 中心 (100,100), 外圈半径77.5
             double scale = radius / 77.5;

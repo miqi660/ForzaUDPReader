@@ -4,10 +4,10 @@
     <!--
         档位大号显示 (R / N / 1-16)
         字号 36pt × 1.33 ≈ 48 DIP
-        使用全局 ForzaFont 资源（sui generis free 字体）
+        使用 MainWindow 中定义的 HudFont 资源
     -->
     <TextBlock x:Name="GearText" Text="N"
-               FontFamily="{StaticResource ForzaFont}"
+               FontFamily="{StaticResource HudFont}"
                FontSize="64" FontWeight="Bold"
                Foreground="#FFCC00"
                HorizontalAlignment="Center"

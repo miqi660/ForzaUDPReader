@@ -56,7 +56,7 @@ dotnet publish -c Release
 
 ## 自定义字体
 
-`Fonts/sui generis free.ttf` 在 `App.xaml` 中注册为全局资源 `ForzaFont`，回退字体为 Arial Black。
+`Fonts/sui-generis-free.ttf` 在 `App.xaml` 中注册为全局资源 `ForzaFont`，回退字体为 Arial Black。
 
 ## 注意事项
 

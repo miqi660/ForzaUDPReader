@@ -27,7 +27,7 @@
 - **Viewbox 等比缩放** — 窗口任意缩放，UI 自适应保持比例
 - **抽屉式动画切换** — `DoubleAnimation` + `CubicEase(EaseOut)` 驱动的平滑宽度过渡
 - **图表显隐控制** — CheckBox 切换 ChartControl，窗口宽度自动动画收缩/展开
-- **自定义字体** — `Fonts/sui generis free.ttf` 注册为全局资源 `ForzaFont`
+- **自定义字体** — `Fonts/sui-generis-free.ttf` 注册为全局资源 `ForzaFont`
 - **鼠标悬停控制面板** — 透明度调节、踏板模式切换（离合/手刹）
 - **窗口拖拽** — 任意非交互区域按住拖拽移动
 
@@ -84,7 +84,7 @@ ForzaUDPReader.WPF/
 │   ├── ForzaTelemetryData.cs           # 324 字节 blittable 遥测结构体
 │   └── UdpReceiver.cs                  # 异步 UDP 监听器
 ├── Fonts/
-│   └── sui generis free.ttf            # 自定义 HUD 字体
+│   └── sui-generis-free.ttf            # 自定义 HUD 字体
 ├── CLAUDE.md                           # Claude Code 项目指引
 └── ForzaUDPReader.WPF.csproj           # 项目文件
 ```

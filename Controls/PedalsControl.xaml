@@ -23,7 +23,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock x:Name="LeftValue" Grid.Row="0" Text="0"
-                       FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"
+                       FontFamily="{StaticResource ForzaFont}" FontSize="14" FontWeight="Bold"
                        Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,2" />
             <Border x:Name="LeftCapTop" Grid.Row="1" Background="#4a6ee0" Height="4" />
             <Border Grid.Row="2" Background="#2a3038">
@@ -37,7 +37,7 @@
             </Border>
             <Border x:Name="LeftCapBottom" Grid.Row="3" Background="#4a6ee0" Height="4" />
             <TextBlock x:Name="LeftPedalLabel" Grid.Row="4" Text="C"
-                       FontFamily="Segoe UI" FontSize="12" FontWeight="Bold"
+                       FontFamily="{StaticResource ForzaFont}" FontSize="12" FontWeight="Bold"
                        Foreground="White" HorizontalAlignment="Center" Margin="0,2,0,0" />
         </Grid>
 
@@ -52,7 +52,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock x:Name="BrakeValue" Grid.Row="0" Text="0"
-                       FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"
+                       FontFamily="{StaticResource ForzaFont}" FontSize="14" FontWeight="Bold"
                        Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,2" />
             <Border Grid.Row="1" Background="#ff6b4a" Height="4" />
             <Border Grid.Row="2" Background="#2a3038">
@@ -66,7 +66,7 @@
             </Border>
             <Border Grid.Row="3" Background="#ff6b4a" Height="4" />
             <TextBlock Grid.Row="4" Text="B"
-                       FontFamily="Segoe UI" FontSize="12" FontWeight="Bold"
+                       FontFamily="{StaticResource ForzaFont}" FontSize="12" FontWeight="Bold"
                        Foreground="White" HorizontalAlignment="Center" Margin="0,2,0,0" />
         </Grid>
 
@@ -81,7 +81,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock x:Name="ThrottleValue" Grid.Row="0" Text="0"
-                       FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"
+                       FontFamily="{StaticResource ForzaFont}" FontSize="14" FontWeight="Bold"
                        Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,2" />
             <Border Grid.Row="1" Background="#4cd964" Height="4" />
             <Border Grid.Row="2" Background="#2a3038">
@@ -95,7 +95,7 @@
             </Border>
             <Border Grid.Row="3" Background="#4cd964" Height="4" />
             <TextBlock Grid.Row="4" Text="T"
-                       FontFamily="Segoe UI" FontSize="12" FontWeight="Bold"
+                       FontFamily="{StaticResource ForzaFont}" FontSize="12" FontWeight="Bold"
                        Foreground="White" HorizontalAlignment="Center" Margin="0,2,0,0" />
         </Grid>
     </Grid>
